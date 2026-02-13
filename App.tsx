@@ -6,6 +6,7 @@ const App: React.FC = () => {
   const [stage, setStage] = useState<'ask' | 'success'>('ask');
   const [noCount, setNoCount] = useState(0);
   const [noButtonPosition, setNoButtonPosition] = useState<{ top: string, left: string } | null>(null);
+  const [imgSrc, setImgSrc] = useState("https://i.imgur.com/6LCYRL9.png");
 
   const noPhrases = [
     "No",
@@ -40,9 +41,9 @@ const App: React.FC = () => {
     
     // Define heart shape for confetti
     // @ts-ignore - shapeFromPath exists in the library but might be missing in types
-    const heart = confetti.shapeFromPath({
+    const heart = confetti.shapeFromPath ? confetti.shapeFromPath({
       path: 'M167 72c19,-38 37,-56 75,-56 42,0 76,33 76,75 0,76 -76,151 -151,227 -76,-76 -151,-151 -151,-227 0,-42 33,-75 75,-75 38,0 57,18 76,56z'
-    });
+    }) : 'circle'; // Fallback if shapeFromPath is undefined
 
     const frame = () => {
       // Reduced particle count significantly to prevent lag
@@ -88,11 +89,12 @@ const App: React.FC = () => {
           <div className="w-full flex justify-center mb-4">
              {/* 
                 Using the Imgur link provided. 
-                Added .png extension for direct image rendering.
+                Added error handling to fallback to a stock image if Imgur fails.
              */}
              <img 
-                src="https://i.imgur.com/6LCYRL9.png" 
-                alt="Cute white rat" 
+                src={imgSrc}
+                onError={() => setImgSrc("https://images.unsplash.com/photo-1518199227707-b21aaa6fb101?auto=format&fit=crop&w=600&q=80")}
+                alt="Cute character" 
                 className="rounded-2xl shadow-xl w-64 h-64 object-cover border-4 border-white bg-white"
              />
           </div>
